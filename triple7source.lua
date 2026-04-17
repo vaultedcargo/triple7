@@ -47,7 +47,7 @@ local PredictGroup = CombatTab:AddRightGroupbox("Prediction & Drop")
 PredictGroup:AddToggle("Prediction", { Text = "Velocity Prediction" })
 PredictGroup:AddSlider("PredictFactor", {
     Text = "Prediction Factor",
-    Default = 0.15,
+    Default = 0.05,
     Min = 0,
     Max = 1,
     Rounding = 2,
@@ -56,9 +56,9 @@ PredictGroup:AddSlider("PredictFactor", {
 PredictGroup:AddToggle("DropComp", { Text = "Drop Compensation" })
 PredictGroup:AddSlider("Gravity", {
     Text = "Gravity",
-    Default = 0.2,
+    Default = 0.1,
     Min = 0,
-    Max = 2,
+    Max = 1,
     Rounding = 2,
     Suffix = ""
 })
