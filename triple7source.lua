@@ -507,3 +507,11 @@ Library:OnUnload(function()
     debugText:Remove()
     chamsFolder:Destroy()
 end)
+
+-- Store references for future reloads
+_G.triple7.Unload = function()
+    Library:Unload()   -- This is Linoria's built‑in unload (destroys ScreenGui, disconnects signals)
+end
+_G.triple7.Library = Library
+
+print("triple7 loaded. Run again to reload.")
