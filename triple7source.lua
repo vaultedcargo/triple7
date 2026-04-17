@@ -160,7 +160,7 @@ ThemeManager:SetFolder("triple7")
 ThemeManager:ApplyToTab(UISettingsTab)
 
 -- Watermark
-Library:SetWatermark("triple7 | FPS: 60 | Ping: 0")
+Library:SetWatermark("triple7 alpha | FPS: 60 | Ping: 0")
 Library:SetWatermarkVisibility(true)
 if Library.Watermark then
     Library.Watermark.AnchorPoint = Vector2.new(0.5, 0)
