@@ -36,7 +36,7 @@ AimbotGroup:AddToggle("WallCheck", { Text = "Wall Check", Default = false })
 AimbotGroup:AddToggle("DebugMode", { Text = "Debug Mode" })
 
 local PriorityGroup = CombatTab:AddLeftGroupbox("Target Priority")
-PriorityGroup:AddToggle("ProfitableFallback", { Text = "Profitable Fallback", Default = true })
+PriorityGroup:AddToggle("ProfitableFallback", { Text = "Profitable Fallback", Default = false })
 PriorityGroup:AddDropdown("PriorityPart", {
     Text = "Priority Part",
     Values = { "Head", "Torso", "Arms", "Legs" },
@@ -109,7 +109,7 @@ ChamsGroup:AddToggle("ChamsEnabled", { Text = "Enable Chams", Default = false })
 ChamsGroup:AddToggle("ChamsTeamColor", { Text = "Use Team Color", Default = false })
 ChamsGroup:AddToggle("ChamsVisibleOnly", { Text = "Visible Only", Default = false })
 
-local FillToggle = ChamsGroup:AddToggle("ChamsFill", { Text = "Fill", Default = true })
+local FillToggle = ChamsGroup:AddToggle("ChamsFill", { Text = "Fill", Default = false })
 FillToggle:AddColorPicker("ChamsFillColor", {
     Default = Color3.new(1, 0, 0),
     Title = "Fill Color"
@@ -117,7 +117,7 @@ FillToggle:AddColorPicker("ChamsFillColor", {
 
 local OutlineToggle = ChamsGroup:AddToggle("ChamsOutline", { Text = "Outline", Default = true })
 OutlineToggle:AddColorPicker("ChamsOutlineColor", {
-    Default = Color3.new(1, 1, 1),
+    Default = Color3.new(0, 0, 0),
     Title = "Outline Color"
 })
 
