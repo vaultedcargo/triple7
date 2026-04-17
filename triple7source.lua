@@ -117,7 +117,7 @@ FillToggle:AddColorPicker("ChamsFillColor", {
 
 local OutlineToggle = ChamsGroup:AddToggle("ChamsOutline", { Text = "Outline", Default = true })
 OutlineToggle:AddColorPicker("ChamsOutlineColor", {
-    Default = Color3.new(0, 0, 0),
+    Default = Color3.new(1, 0, 0),
     Title = "Outline Color"
 })
 
