@@ -1,3 +1,23 @@
+-- === RELOAD / SINGLETON CHECK ===
+if _G.triple7 then
+    print("triple7 is already running. Unloading previous instance.")
+    local old = _G.triple7
+    _G.triple7 = nil
+
+    -- Call the old unload function (this destroys the UI and disconnects everything)
+    if old.Unload then
+        old.Unload()
+    end
+
+    -- Wait a moment for cleanup to finish
+    task.wait(0.5)
+
+    print("Previous instance unloaded. Loading fresh.")
+end
+
+-- Create a global table to hold the new instance's unload function
+_G.triple7 = {}
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/librarysrc.lua"))()
 local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/libraryfunc/themefunc.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/libraryfunc/savefunc.lua"))()
