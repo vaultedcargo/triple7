@@ -68,8 +68,8 @@ FOVGroup:AddToggle("ShowFOV", { Text = "Show FOV Circle" })
 FOVGroup:AddSlider("FOVRadius", {
     Text = "FOV Radius",
     Default = 100,
-    Min = 100,
-    Max = 250,
+    Min = 50,
+    Max = 500,
     Rounding = 0,
     Suffix = "px"
 })
@@ -77,17 +77,17 @@ FOVGroup:AddSlider("FOVRadius", {
 local SettingsGroup = CombatTab:AddLeftGroupbox("Settings")
 SettingsGroup:AddSlider("MaxDistance", {
     Text = "Max Distance",
-    Default = 500,
-    Min = 100,
-    Max = 1000,
+    Default = 1000,
+    Min = 67,
+    Max = 10067,
     Rounding = 0,
     Suffix = " studs"
 })
 SettingsGroup:AddSlider("AimSpeed", {
     Text = "Aimbot Speed",
-    Default = 50,
+    Default = 100,
     Min = 1,
-    Max = 100,
+    Max = 500,
     Rounding = 0,
     Suffix = "%"
 })
@@ -133,8 +133,8 @@ ChamsGroup:AddSlider("ChamsFillTransparency", {
 ChamsGroup:AddSlider("ChamsMaxFPS", {
     Text = "Max ESP FPS",
     Default = 30,
-    Min = 10,
-    Max = 60,
+    Min = 5,
+    Max = 120,
     Rounding = 0,
     Suffix = " FPS"
 })
