@@ -18,7 +18,6 @@ local Window = Library:CreateWindow({
     MenuFadeTime = 0.2
 })
 
--- Combat Tab (Aimbot)
 local CombatTab = Window:AddTab("Combat")
 
 local AimbotGroup = CombatTab:AddLeftGroupbox("Aimbot")
@@ -91,6 +90,15 @@ SettingsGroup:AddSlider("AimSpeed", {
     Rounding = 0,
     Suffix = "%"
 })
+SettingsGroup:AddSlider("VerticalOffset", {
+    Text = "Vertical Offset",
+    Default = 0,
+    Min = -5,
+    Max = 5,
+    Rounding = 2,
+    Suffix = " studs",
+    Tooltip = "Negative values aim lower, positive aim higher"
+})
 
 local IgnoreGroup = CombatTab:AddRightGroupbox("Ignore List")
 IgnoreGroup:AddDropdown("IgnorePlayers", {
@@ -101,7 +109,6 @@ IgnoreGroup:AddDropdown("IgnorePlayers", {
     Callback = function() end
 })
 
--- Visuals Tab (Chams ESP)
 local VisualsTab = Window:AddTab("Visuals")
 
 local ChamsGroup = VisualsTab:AddLeftGroupbox("Chams ESP")
@@ -139,7 +146,31 @@ ChamsGroup:AddSlider("ChamsMaxFPS", {
     Suffix = " FPS"
 })
 
--- UI Settings Tab
+local NametagsGroup = VisualsTab:AddRightGroupbox("Nametags ESP")
+NametagsGroup:AddToggle("NametagsEnabled", { Text = "Enable Nametags", Default = false })
+NametagsGroup:AddToggle("NametagsTeamCheck", { Text = "Team Check", Default = true })
+NametagsGroup:AddToggle("NametagsDistanceMeters", { Text = "Distance in Meters", Default = false })
+NametagsGroup:AddSlider("NametagsMaxDistance", {
+    Text = "Max Distance",
+    Default = 500,
+    Min = 50,
+    Max = 2000,
+    Rounding = 0,
+    Suffix = " studs"
+})
+NametagsGroup:AddLabel("Text Color"):AddColorPicker("NametagsColor", {
+    Default = Color3.new(1, 1, 1),
+    Title = "Nametag Color"
+})
+NametagsGroup:AddSlider("NametagsFontSize", {
+    Text = "Font Size",
+    Default = 14,
+    Min = 10,
+    Max = 24,
+    Rounding = 0,
+    Suffix = "px"
+})
+
 local UISettingsTab = Window:AddTab("UI Settings")
 local MenuGroup = UISettingsTab:AddLeftGroupbox("Menu")
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", {
@@ -159,7 +190,6 @@ ThemeManager:SetLibrary(Library)
 ThemeManager:SetFolder("triple7")
 ThemeManager:ApplyToTab(UISettingsTab)
 
--- Watermark
 Library:SetWatermark("triple7 alpha | FPS: 60 | Ping: 0")
 Library:SetWatermarkVisibility(true)
 if Library.Watermark then
@@ -185,7 +215,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- FOV Circle (follows mouse)
 local fovGui = Instance.new("ScreenGui")
 fovGui.Name = "FOVCircle"
 fovGui.Parent = CoreGui
@@ -220,7 +249,6 @@ innerStroke.Transparency = 0.2
 innerStroke.LineJoinMode = Enum.LineJoinMode.Round
 innerStroke.Parent = fovFrame
 
--- Debug text
 local debugText = Drawing.new("Text")
 debugText.Visible = false
 debugText.Color = Color3.new(1, 1, 1)
@@ -229,12 +257,16 @@ debugText.Center = true
 debugText.Outline = true
 debugText.OutlineColor = Color3.new(0, 0, 0)
 
--- Chams ESP Storage
 local chamsFolder = Instance.new("Folder")
 chamsFolder.Name = "ChamsESP"
 chamsFolder.Parent = CoreGui
 
+local nametagsFolder = Instance.new("Folder")
+nametagsFolder.Name = "NametagsESP"
+nametagsFolder.Parent = CoreGui
+
 local playerChams = {}
+local playerNametags = {}
 
 local function updateChams()
     for plr, highlight in pairs(playerChams) do
@@ -287,7 +319,95 @@ local function updateChams()
     end
 end
 
--- Profitable fallback order (R6 and R15)
+local function updateNametags()
+    for plr, drawObj in pairs(playerNametags) do
+        if not plr.Parent then
+            drawObj:Remove()
+            playerNametags[plr] = nil
+        end
+    end
+
+    if not Toggles.NametagsEnabled.Value then
+        for _, drawObj in pairs(playerNametags) do
+            drawObj.Visible = false
+        end
+        return
+    end
+
+    local localTeam = LocalPlayer.Team
+    local maxDist = Options.NametagsMaxDistance.Value
+    local useMeters = Toggles.NametagsDistanceMeters.Value
+    local textColor = Options.NametagsColor.Value
+    local fontSize = Options.NametagsFontSize.Value
+    local teamCheck = Toggles.NametagsTeamCheck.Value
+
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr == LocalPlayer then continue end
+        if teamCheck and plr.Team == localTeam then
+            if playerNametags[plr] then
+                playerNametags[plr].Visible = false
+            end
+            continue
+        end
+
+        local char = plr.Character
+        if not char then
+            if playerNametags[plr] then
+                playerNametags[plr].Visible = false
+            end
+            continue
+        end
+
+        local head = char:FindFirstChild("Head")
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not head or not root then
+            if playerNametags[plr] then
+                playerNametags[plr].Visible = false
+            end
+            continue
+        end
+
+        local camPos = Camera.CFrame.Position
+        local dist = (root.Position - camPos).Magnitude
+        if dist > maxDist then
+            if playerNametags[plr] then
+                playerNametags[plr].Visible = false
+            end
+            continue
+        end
+
+        local screenPos, onScreen = Camera:WorldToViewportPoint(head.Position + Vector3.new(0, 2.5, 0))
+        if not onScreen then
+            if playerNametags[plr] then
+                playerNametags[plr].Visible = false
+            end
+            continue
+        end
+
+        local drawObj = playerNametags[plr]
+        if not drawObj then
+            drawObj = Drawing.new("Text")
+            drawObj.Center = true
+            drawObj.Outline = true
+            drawObj.OutlineColor = Color3.new(0, 0, 0)
+            playerNametags[plr] = drawObj
+        end
+
+        local distanceStr
+        if useMeters then
+            distanceStr = string.format("%.1fm", dist * 0.28)
+        else
+            distanceStr = string.format("%.0f studs", dist)
+        end
+
+        drawObj.Text = string.format("%s\n[%s]", plr.Name, distanceStr)
+        drawObj.Color = textColor
+        drawObj.Size = fontSize
+        drawObj.Position = Vector2.new(screenPos.X, screenPos.Y)
+        drawObj.Visible = true
+    end
+end
+
 local R6_PROFITABLE = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg", "HumanoidRootPart"}
 local R15_PROFITABLE = {
     "Head",
@@ -304,7 +424,6 @@ local PRIORITY_MAP = {
     Legs = {"LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg", "LeftFoot", "RightFoot", "Left Leg", "Right Leg"}
 }
 
--- Cache player data per frame
 local playerCache = {}
 
 local function updatePlayerCache()
@@ -422,17 +541,15 @@ local function getTarget()
     return bestPlayer, bestPart, bestPos
 end
 
--- FPS Limiter for ESP updates
 local espUpdateTimer = 0
 local espUpdateInterval = 1 / 30
 
--- Main loop
 RunService.RenderStepped:Connect(function(deltaTime)
-    -- Update ESP at limited framerate
     espUpdateTimer = espUpdateTimer + deltaTime
     espUpdateInterval = 1 / Options.ChamsMaxFPS.Value
     if espUpdateTimer >= espUpdateInterval then
         updateChams()
+        updateNametags()
         espUpdateTimer = espUpdateTimer - espUpdateInterval
     end
 
@@ -452,6 +569,9 @@ RunService.RenderStepped:Connect(function(deltaTime)
 
     if aimbotActive then
         targetPlayer, targetPart, targetPos = getTarget()
+        if targetPos then
+            targetPos = targetPos - Vector3.new(0, Options.VerticalOffset.Value, 0)
+        end
     end
 
     if Toggles.DebugMode.Value and aimbotActive and targetPart then
@@ -479,6 +599,10 @@ Players.PlayerRemoving:Connect(function(plr)
         playerChams[plr]:Destroy()
         playerChams[plr] = nil
     end
+    if playerNametags[plr] then
+        playerNametags[plr]:Remove()
+        playerNametags[plr] = nil
+    end
 end)
 
 Library:OnUnload(function()
@@ -486,4 +610,8 @@ Library:OnUnload(function()
     fovGui:Destroy()
     debugText:Remove()
     chamsFolder:Destroy()
+    for _, drawObj in pairs(playerNametags) do
+        drawObj:Remove()
+    end
+    nametagsFolder:Destroy()
 end)
