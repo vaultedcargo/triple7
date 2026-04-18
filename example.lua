@@ -1,5 +1,4 @@
--- New example script written by triple7 team
--- You can suggest changes with a pull request or something
+-- example script written by triple7 team
 
 local repo = 'https://raw.githubusercontent.com/vaultedcargo/triple7/main/'
 
