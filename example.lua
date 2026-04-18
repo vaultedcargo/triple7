@@ -12,7 +12,7 @@ local Window = Library:CreateWindow({
     -- Position and Size are also valid options here
     -- but you do not need to define them unless you are changing them :)
 
-    Title = 'Example menu',
+    Title = 'triple7 Example Menu',
     Center = true,
     AutoShow = true,
     TabPadding = 8,
