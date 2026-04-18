@@ -4,21 +4,22 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/v
 
 local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Window = Library:CreateWindow({
-    Title = "triple7 Project Delta / 0.0.1 / 18.04.2026",
+    Title = "triple7 Project Delta / 0.0.2 / 18.04.2026",
     Center = true,
     AutoShow = true,
     TabPadding = 8,
     MenuFadeTime = 0
 })
 
-local UISettingsTab = Window:AddTab("UI Settings")
+local UISettingsTab = Window:AddTab("Settings")
 local MenuGroup = UISettingsTab:AddLeftGroupbox("Menu")
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", {
     Default = "Insert",
     NoUI = true,
-    Text = "Menu keybind"
+    Text = "UI keybind"
 })
 Library.ToggleKeybind = Options.MenuKeybind
 
@@ -31,6 +32,77 @@ SaveManager:BuildConfigSection(UISettingsTab)
 ThemeManager:SetLibrary(Library)
 ThemeManager:SetFolder("triple7pd")
 ThemeManager:ApplyToTab(UISettingsTab)
+
+local CombatTab = Window:AddTab("Combat")
+local WeaponModsGroup = CombatTab:AddLeftGroupbox("Weapon Mods")
+
+local originalValues = {}
+local ammoTypesFolder = ReplicatedStorage:FindFirstChild("AmmoTypes")
+
+local function applyWeaponMods()
+    if not ammoTypesFolder then return end
+
+    for _, ammoType in ipairs(ammoTypesFolder:GetChildren()) do
+        if not ammoType:IsA("Instance") then continue end
+
+        local name = ammoType:GetFullName()
+        if not originalValues[name] then
+            originalValues[name] = {
+                RecoilStrength = ammoType:GetAttribute("RecoilStrength"),
+                ProjectileDrop = ammoType:GetAttribute("ProjectileDrop"),
+                AccuracyDeviation = ammoType:GetAttribute("AccuracyDeviation"),
+            }
+        end
+
+        if Toggles.NoRecoil and Toggles.NoRecoil.Value then
+            ammoType:SetAttribute("RecoilStrength", 0)
+        else
+            local orig = originalValues[name].RecoilStrength
+            if orig ~= nil then
+                ammoType:SetAttribute("RecoilStrength", orig)
+            end
+        end
+
+        if Toggles.NoSpread and Toggles.NoSpread.Value then
+            ammoType:SetAttribute("ProjectileDrop", 0)
+            ammoType:SetAttribute("AccuracyDeviation", 0)
+        else
+            local origDrop = originalValues[name].ProjectileDrop
+            local origAcc = originalValues[name].AccuracyDeviation
+            if origDrop ~= nil then
+                ammoType:SetAttribute("ProjectileDrop", origDrop)
+            end
+            if origAcc ~= nil then
+                ammoType:SetAttribute("AccuracyDeviation", origAcc)
+            end
+        end
+    end
+end
+
+WeaponModsGroup:AddToggle("NoRecoil", {
+    Text = "No Recoil",
+    Default = false,
+    Tooltip = "Sets RecoilStrength to 0",
+    Callback = function(value)
+        applyWeaponMods()
+    end
+})
+
+WeaponModsGroup:AddToggle("NoSpread", {
+    Text = "No Spread",
+    Default = false,
+    Tooltip = "Sets AccuracyDeviation and ProjectileDrop to 0",
+    Callback = function(value)
+        applyWeaponMods()
+    end
+})
+
+if ammoTypesFolder then
+    ammoTypesFolder.ChildAdded:Connect(function(child)
+        task.wait()
+        applyWeaponMods()
+    end)
+end
 
 Library:SetWatermark("triple7 PD | FPS: 60 | Ping: 0")
 Library:SetWatermarkVisibility(true)
@@ -58,4 +130,10 @@ RunService.RenderStepped:Connect(function()
 end)
 
 Library:OnUnload(function()
+    if Toggles.NoRecoil and Toggles.NoRecoil.Value then
+        Toggles.NoRecoil:SetValue(false)
+    end
+    if Toggles.NoSpread and Toggles.NoSpread.Value then
+        Toggles.NoSpread:SetValue(false)
+    end
 end)
