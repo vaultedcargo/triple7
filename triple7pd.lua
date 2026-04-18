@@ -34,25 +34,26 @@ ThemeManager:ApplyToTab(UISettingsTab)
 
 Library:SetWatermark("triple7 PD | FPS: 60 | Ping: 0")
 Library:SetWatermarkVisibility(true)
+if Library.Watermark then
+    Library.Watermark.AnchorPoint = Vector2.new(0.5, 0)
+    Library.Watermark.Position = UDim2.new(0.5, 0, 0, 10)
+end
 
 local FrameTimer = tick()
 local FrameCounter = 0
 local FPS = 60
-local LastWatermarkUpdate = 0
-
-RunService.RenderStepped:Connect(function(DeltaTime)
+RunService.RenderStepped:Connect(function()
     FrameCounter += 1
     if (tick() - FrameTimer) >= 1 then
         FPS = FrameCounter
         FrameTimer = tick()
         FrameCounter = 0
     end
-    
-    LastWatermarkUpdate = LastWatermarkUpdate + DeltaTime
-    if LastWatermarkUpdate >= 0.1 then
-        LastWatermarkUpdate = 0
-        local Ping = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
-        Library:SetWatermark(string.format("triple7 PD | FPS: %d | Ping: %d", FPS, Ping))
+    local Ping = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
+    Library:SetWatermark(string.format("triple7 PD | FPS: %d | Ping: %d", FPS, Ping))
+    if Library.Watermark then
+        Library.Watermark.AnchorPoint = Vector2.new(0.5, 0)
+        Library.Watermark.Position = UDim2.new(0.5, 0, 0, 10)
     end
 end)
 
