@@ -10,7 +10,7 @@ local Window = Library:CreateWindow({
     Center = true,
     AutoShow = true,
     TabPadding = 8,
-    MenuFadeTime = 0.2
+    MenuFadeTime = 0
 })
 
 local UISettingsTab = Window:AddTab("UI Settings")
@@ -35,6 +35,7 @@ ThemeManager:ApplyToTab(UISettingsTab)
 Library:SetWatermark("triple7 PD | FPS: 60 | Ping: 0")
 Library:SetWatermarkVisibility(true)
 if Library.Watermark then
+    Library.Watermark.AnchorPoint = Vector2.new(0.5, 0)
     Library.Watermark.Position = UDim2.new(0.5, 0, 0, 10)
 end
 
@@ -51,6 +52,7 @@ RunService.RenderStepped:Connect(function()
     local Ping = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
     Library:SetWatermark(string.format("triple7 PD | FPS: %d | Ping: %d", FPS, Ping))
     if Library.Watermark then
+        Library.Watermark.AnchorPoint = Vector2.new(0.5, 0)
         Library.Watermark.Position = UDim2.new(0.5, 0, 0, 10)
     end
 end)
