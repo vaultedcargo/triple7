@@ -11,6 +11,15 @@ local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Camera = workspace.CurrentCamera
+RunService.Heartbeat:Connect(function()
+    if os.clock() % 10 < 0.05 then
+        if Camera then
+            Camera.CFrame = Camera.CFrame * CFrame.Angles(0, 0.001, 0)
+        end
+    end
+end)
+
 local Window = Library:CreateWindow({
     Title = "triple7 Project Delta / 0.0.2 / 18.04.2026",
     Center = true,
