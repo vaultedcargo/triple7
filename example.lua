@@ -1,11 +1,11 @@
--- New example script written by wally
+-- New example script written by triple7 team
 -- You can suggest changes with a pull request or something
 
-local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
+local repo = 'https://raw.githubusercontent.com/vaultedcargo/triple7/main/'
 
-local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
-local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
-local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+local Library = loadstring(game:HttpGet(repo .. 'librarysrc.lua'))()
+local ThemeManager = loadstring(game:HttpGet(repo .. 'libraryfunc/themefunc.lua'))()
+local SaveManager = loadstring(game:HttpGet(repo .. 'libraryfunc/savefunc.lua'))()
 
 local Window = Library:CreateWindow({
     -- Set Center to true if you want the menu to appear in the center
