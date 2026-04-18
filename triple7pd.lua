@@ -1,6 +1,6 @@
 --[[
 i hate doing this
-for now i got no clue on what to add
+for now i got no clue on what to add, might experiment :>
 ]]
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/librarysrc.lua"))()
