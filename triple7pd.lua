@@ -151,7 +151,7 @@ CameraGroup:AddSlider("CameraFOV", {
     Text = "FOV",
     Default = 90,
     Min = 1,
-    Max = 180,
+    Max = 120,
     Rounding = 0,
     Suffix = "°",
     Tooltip = "Adjust FOV",
