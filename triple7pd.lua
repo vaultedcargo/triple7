@@ -1,3 +1,16 @@
+local success, authContent = pcall(function()
+    return game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/auth")
+end)
+
+if not success or authContent:gsub("%s+", "") ~= "77718273666777" then
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    if LocalPlayer then
+        LocalPlayer:Kick("Authentication failed.")
+    end
+    return
+end
+
 --[[
 i hate doing this
 for now i got no clue on what to add, might experiment :>
@@ -13,7 +26,7 @@ local Stats = game:GetService("Stats")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Window = Library:CreateWindow({
-    Title = "triple7 Project Delta / 0.0.2 / 18.04.2026",
+    Title = "triple7 Project Delta / 1.1.2 / 18.04.2026",
     Center = true,
     AutoShow = true,
     TabPadding = 8,
