@@ -2,7 +2,7 @@ local success, authContent = pcall(function()
     return game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/hex")
 end)
 
-if not success or authContent:gsub("%s+", "") ~= "747269706C6537" then
+if not success or authContent:gsub("%s+", "") ~= "747269706C6536" then
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
     if LocalPlayer then
