@@ -1,3 +1,5 @@
+-- this is a ThemeManager dont touch
+
 local httpService = game:GetService('HttpService')
 local ThemeManager = {} do
 	ThemeManager.Folder = 'triple7lib'
