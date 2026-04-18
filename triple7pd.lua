@@ -1,7 +1,7 @@
 --[[
 i hate doing this
 for now i got no clue on what to add, might experiment :>
-has: antiafk, no recoil, no spread
+has: no recoil, no spread, fov changer, zoom
 ]]
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/librarysrc.lua"))()
@@ -11,15 +11,6 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/v
 local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local Camera = workspace.CurrentCamera
-RunService.Heartbeat:Connect(function()
-    if os.clock() % 10 < 0.05 then
-        if Camera then
-            Camera.CFrame = Camera.CFrame * CFrame.Angles(0, 0.001, 0)
-        end
-    end
-end)
 
 local Window = Library:CreateWindow({
     Title = "triple7 Project Delta / 0.0.2 / 18.04.2026",
@@ -99,6 +90,95 @@ if ammoTypesFolder then
         applyWeaponMods()
     end)
 end
+
+local VisualsTab = Window:AddTab("Visuals")
+local CameraGroup = VisualsTab:AddLeftGroupbox("Camera")
+
+local fovEnabled = false
+local normalFOV = 70
+local zoomFOV = 30
+local fovConnection = nil
+
+local function getTargetFOV()
+    if not Options.CameraZoomKeybind then
+        return normalFOV
+    end
+    local isZoomed = Options.CameraZoomKeybind:GetState()
+    return isZoomed and zoomFOV or normalFOV
+end
+
+local function forceFOV()
+    local cam = workspace.CurrentCamera
+    if cam and fovEnabled then
+        local target = getTargetFOV()
+        if cam.FieldOfView ~= target then
+            cam.FieldOfView = target
+        end
+    end
+end
+
+local function startForcing()
+    if fovConnection then return end
+    fovConnection = RunService.RenderStepped:Connect(forceFOV)
+end
+
+local function stopForcing()
+    if fovConnection then
+        fovConnection:Disconnect()
+        fovConnection = nil
+    end
+    local cam = workspace.CurrentCamera
+    if cam then
+        cam.FieldOfView = 70
+    end
+end
+
+CameraGroup:AddToggle("EnableCameraFOV", {
+    Text = "Enable Camera FOV",
+    Default = false,
+    Tooltip = "Master toggle for camera modifications",
+    Callback = function(value)
+        fovEnabled = value
+        if value then
+            startForcing()
+        else
+            stopForcing()
+        end
+    end
+})
+
+CameraGroup:AddSlider("CameraFOV", {
+    Text = "Camera FOV",
+    Default = 70,
+    Min = 30,
+    Max = 120,
+    Rounding = 0,
+    Suffix = "°",
+    Tooltip = "Adjust camera field of view",
+    Callback = function(value)
+        normalFOV = value
+    end
+})
+
+CameraGroup:AddSlider("CameraZoomFOV", {
+    Text = "Camera Zoom FOV",
+    Default = 30,
+    Min = 10,
+    Max = 60,
+    Rounding = 0,
+    Suffix = "°",
+    Tooltip = "FOV when zoomed in",
+    Callback = function(value)
+        zoomFOV = value
+    end
+})
+
+CameraGroup:AddLabel("Camera Zoom Bind"):AddKeyPicker("CameraZoomKeybind", {
+    Default = "C",
+    Mode = "Hold",
+    Text = "Camera Zoom (Hold)",
+    NoUI = false
+})
 
 local UISettingsTab = Window:AddTab("Settings")
 local MenuGroup = UISettingsTab:AddLeftGroupbox("Menu")
