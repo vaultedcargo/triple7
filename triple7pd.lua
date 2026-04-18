@@ -14,25 +14,6 @@ local Window = Library:CreateWindow({
     MenuFadeTime = 0
 })
 
-local UISettingsTab = Window:AddTab("Settings")
-local MenuGroup = UISettingsTab:AddLeftGroupbox("Menu")
-MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", {
-    Default = "Insert",
-    NoUI = true,
-    Text = "UI keybind"
-})
-Library.ToggleKeybind = Options.MenuKeybind
-
-SaveManager:SetLibrary(Library)
-SaveManager:SetFolder("triple7pd")
-SaveManager:IgnoreThemeSettings()
-SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
-SaveManager:BuildConfigSection(UISettingsTab)
-
-ThemeManager:SetLibrary(Library)
-ThemeManager:SetFolder("triple7pd")
-ThemeManager:ApplyToTab(UISettingsTab)
-
 local CombatTab = Window:AddTab("Combat")
 local WeaponModsGroup = CombatTab:AddLeftGroupbox("Weapon Mods")
 
@@ -104,6 +85,25 @@ if ammoTypesFolder then
     end)
 end
 
+local UISettingsTab = Window:AddTab("Settings")
+local MenuGroup = UISettingsTab:AddLeftGroupbox("Menu")
+MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", {
+    Default = "Insert",
+    NoUI = true,
+    Text = "UI keybind"
+})
+Library.ToggleKeybind = Options.MenuKeybind
+
+SaveManager:SetLibrary(Library)
+SaveManager:SetFolder("triple7pd")
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
+SaveManager:BuildConfigSection(UISettingsTab)
+
+ThemeManager:SetLibrary(Library)
+ThemeManager:SetFolder("triple7pd")
+ThemeManager:ApplyToTab(UISettingsTab)
+
 Library:SetWatermark("triple7 PD | FPS: 60 | Ping: 0")
 Library:SetWatermarkVisibility(true)
 if Library.Watermark then
@@ -126,14 +126,5 @@ RunService.RenderStepped:Connect(function()
     if Library.Watermark then
         Library.Watermark.AnchorPoint = Vector2.new(0.5, 0)
         Library.Watermark.Position = UDim2.new(0.5, 0, 0, 10)
-    end
-end)
-
-Library:OnUnload(function()
-    if Toggles.NoRecoil and Toggles.NoRecoil.Value then
-        Toggles.NoRecoil:SetValue(false)
-    end
-    if Toggles.NoSpread and Toggles.NoSpread.Value then
-        Toggles.NoSpread:SetValue(false)
     end
 end)
