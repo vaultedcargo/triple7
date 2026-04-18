@@ -1,12 +1,25 @@
-local success, authContent = pcall(function()
+local expectedHex = "747269706C6537"
+
+local success, rawContent = pcall(function()
     return game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/hex")
 end)
 
-if not success or authContent:gsub("%s+", "") ~= "81923773" then
+if not success then
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
     if LocalPlayer then
-        LocalPlayer:Kick("Authentication failed.")
+        LocalPlayer:Kick("unable to fetch the hex value")
+    end
+    return
+end
+
+local hexValue = rawContent:match("hex%s*=%s*[\"']?([%w]+)[\"']?")
+
+if not hexValue or hexValue ~= expectedHex then
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    if LocalPlayer then
+        LocalPlayer:Kick("invalid hex")
     end
     return
 end
