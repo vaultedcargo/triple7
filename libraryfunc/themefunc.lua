@@ -1,6 +1,6 @@
 local httpService = game:GetService('HttpService')
 local ThemeManager = {} do
-	ThemeManager.Folder = 'LinoriaLibSettings'
+	ThemeManager.Folder = 'triple7lib'
 
 	ThemeManager.Library = nil
 	ThemeManager.BuiltInThemes = {
