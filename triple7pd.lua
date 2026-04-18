@@ -95,7 +95,7 @@ local VisualsTab = Window:AddTab("Visuals")
 local CameraGroup = VisualsTab:AddLeftGroupbox("Camera")
 
 local fovEnabled = false
-local normalFOV = 70
+local normalFOV = 90
 local zoomFOV = 30
 local fovConnection = nil
 
@@ -129,14 +129,14 @@ local function stopForcing()
     end
     local cam = workspace.CurrentCamera
     if cam then
-        cam.FieldOfView = 70
+        cam.FieldOfView = 90
     end
 end
 
 CameraGroup:AddToggle("EnableCameraFOV", {
-    Text = "Enable Camera FOV",
+    Text = "Toggle FOV",
     Default = false,
-    Tooltip = "Master toggle for camera modifications",
+    Tooltip = "Toggle for camera mods ",
     Callback = function(value)
         fovEnabled = value
         if value then
@@ -148,32 +148,32 @@ CameraGroup:AddToggle("EnableCameraFOV", {
 })
 
 CameraGroup:AddSlider("CameraFOV", {
-    Text = "Camera FOV",
-    Default = 70,
-    Min = 30,
-    Max = 120,
+    Text = "FOV",
+    Default = 90,
+    Min = 1,
+    Max = 180,
     Rounding = 0,
     Suffix = "°",
-    Tooltip = "Adjust camera field of view",
+    Tooltip = "Adjust FOV",
     Callback = function(value)
         normalFOV = value
     end
 })
 
 CameraGroup:AddSlider("CameraZoomFOV", {
-    Text = "Camera Zoom FOV",
+    Text = "Zoom FOV",
     Default = 30,
-    Min = 10,
-    Max = 60,
+    Min = 1,
+    Max = 120,
     Rounding = 0,
     Suffix = "°",
-    Tooltip = "FOV when zoomed in",
+    Tooltip = "FOV when holding zoom bind",
     Callback = function(value)
         zoomFOV = value
     end
 })
 
-CameraGroup:AddLabel("Camera Zoom Bind"):AddKeyPicker("CameraZoomKeybind", {
+CameraGroup:AddLabel("Zoom bind"):AddKeyPicker("CameraZoomKeybind", {
     Default = "C",
     Mode = "Hold",
     Text = "Camera Zoom (Hold)",
