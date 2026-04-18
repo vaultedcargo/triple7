@@ -128,3 +128,5 @@ RunService.RenderStepped:Connect(function()
         Library.Watermark.Position = UDim2.new(0.5, 0, 0, 10)
     end
 end)
+
+Library:Notify("triple7 loaded", 3)
