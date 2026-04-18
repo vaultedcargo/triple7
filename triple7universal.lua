@@ -1,5 +1,7 @@
--- THIS IS A UNIVERSAL SCRIPT - IT MIGHT NOT WORK BECAUSE OF ANTICHEATS BUT WELL... IDC! 
-
+--[[
+i hate doing this
+this script is stopped for now, focusing on pd
+]]
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/librarysrc.lua"))()
 local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/libraryfunc/themefunc.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/vaultedcargo/triple7/refs/heads/main/libraryfunc/savefunc.lua"))()
